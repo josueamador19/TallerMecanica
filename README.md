@@ -25,4 +25,7 @@
 Para conectar python a Oracle
 
 Ejecutar pip install oracledb
+
+Para conectar python a SqlServer
+
 Ejecutar pip install pyodbc
