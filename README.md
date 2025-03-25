@@ -19,3 +19,10 @@
 -Cristian Enrique Valdes Campos 20141003610
 
 -Kevin Dagoberto Garcia Maldonado 20221002036
+
+# Instalacion de dependencias para conectar SQL Developer, SQL Server con Python
+
+Para conectar python a Oracle
+
+Ejecutar pip install oracledb
+Ejecutar pip install pyodbc
