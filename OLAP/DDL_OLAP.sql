@@ -1,103 +1,109 @@
-CREATE DATABASE DW_TALLERMECANICA
-GO
-USE DW_TALLERMECANICA
-GO
- 
+﻿ CREATE DATABASE DW_TALLERMECANICA
+
+
+ USE DW_TALLERMECANICA;
+ GO
 -- Dimension Tiempo
-CREATE TABLE DIMTIEMPO (
-    ID_TIEMPO INT PRIMARY KEY,
-    ANIO INT,
-    MES INT,
-    DIA INT,
-    TRIMESTRE INT
+create table dimtiempo (
+   id_tiempo date primary key,
+   anio      int,
+   mes       int,
+   dia       int,
+   trimestre int
 );
 
 -- Subdimensiones TipoCliente y Genero
-CREATE TABLE SUBDIMTIPOCLIENTE (
-    ID_TIPO_CLIENTE INT PRIMARY KEY,
-    DESCRIPCION VARCHAR(20)
+create table subdimtipocliente (
+   id_tipo_cliente varchar(20) primary key
 );
 
-CREATE TABLE SUBDIMGENERO (
-    ID_GENERO INT PRIMARY KEY,
-    DESCRIPCION VARCHAR(10)
+create table subdimgenero (
+   id_genero varchar(10) primary key
 );
 
 -- Dimension Clientes
-CREATE TABLE DIMCLIENTES (
-    ID_CLIENTE INT PRIMARY KEY,
-    NOMBRE VARCHAR(100),
-    ID_TIPO_CLIENTE INT,
-    ID_GENERO INT,
-    ESTATUS VARCHAR(20),
-    FOREIGN KEY (ID_TIPO_CLIENTE) REFERENCES SUBDIMTIPOCLIENTE(ID_TIPO_CLIENTE),
-    FOREIGN KEY (ID_GENERO) REFERENCES SUBDIMGENERO(ID_GENERO)
+create table dimclientes (
+   id_cliente      int primary key,
+   nombre          varchar(100),
+   id_tipo_cliente varchar(20),
+   genero          varchar(10),
+   estatus         varchar(20),
+   foreign key ( id_tipo_cliente )
+      references subdimtipocliente ( id_tipo_cliente ),
+   foreign key ( genero )
+      references subdimgenero ( id_genero )
 );
 
-CREATE TABLE SUBDIMMARCA (
-    ID_MARCA INT PRIMARY KEY,
-    DESCRIPCION VARCHAR(50)
+create table subdimmarca (
+   id_marca varchar(50) primary key
 );
 
 -- Dimension Vei�culos
-CREATE TABLE DIMVEHICULOS (
-    ID_VEHICULO INT PRIMARY KEY,
-    ID_MARCA INT,
-    MODELO VARCHAR(50),
-    ANIO INT,
-    FOREIGN KEY (ID_MARCA) REFERENCES SUBDIMMARCA(ID_MARCA)
+create table dimvehiculos (
+   id_vehiculo int primary key,
+   id_marca    varchar(50),
+   modelo      varchar(50),
+   anio        int,
+   foreign key ( id_marca )
+      references subdimmarca ( id_marca )
 );
 
 -- Subdimensiones Puesto y Especializacion
-CREATE TABLE SUBDIMPUESTO (
-    ID_PUESTO INT PRIMARY KEY,
-    DESCRIPCION VARCHAR(50)
+create table subdimpuesto (
+   id_puesto varchar(50) primary key
 );
 
-CREATE TABLE SUBDIMESPECIALIZACION (
-    ID_ESPECIALIZACION INT PRIMARY KEY,
-    DESCRIPCION VARCHAR(100)
+create table subdimespecializacion (
+   id_especializacion varchar(100) primary key
 );
 
 -- Dimension Empleados
-CREATE TABLE DIMEMPLEADOS (
-    ID_EMPLEADO INT PRIMARY KEY,
-    NOMBRE VARCHAR(100),
-    ID_PUESTO INT,
-    TURNO VARCHAR(20),
-    ID_ESPECIALIZACION INT,
-    FOREIGN KEY (ID_PUESTO) REFERENCES SUBDIMPUESTO(ID_PUESTO),
-    FOREIGN KEY (ID_ESPECIALIZACION) REFERENCES SUBDIMESPECIALIZACION(ID_ESPECIALIZACION)
+create table dimempleados (
+   id_empleado     int primary key,
+   nombre          varchar(100),
+   puesto          varchar(50),
+   turno           varchar(20),
+   especializacion varchar(100),
+   foreign key ( puesto )
+      references subdimpuesto ( id_puesto ),
+   foreign key ( especializacion )
+      references subdimespecializacion ( id_especializacion )
 );
 
 -- Dimension Servicios
-CREATE TABLE DIMSERVICIOS (
-    ID_SERVICIO INT PRIMARY KEY,
-    DESCRIPCION VARCHAR(255),
-    COSTO_UNITARIO DECIMAL(10, 2)
+create table dimservicios (
+   id_servicio    int primary key,
+   descripcion    varchar(255),
+   costo_unitario decimal(10,2)
 );
 
 -- Tabla de Hechos Ordenes de Servicio
-CREATE TABLE HECHOSORDENESSERVICIO (
-    ID_ORDEN INT PRIMARY KEY,
-    ID_TIEMPO INT,
-    ID_CLIENTE INT,
-    ID_VEHICULO INT,
-    ID_EMPLEADO INT,
-    CANTIDAD_SERVICIOS INT,
-    COSTO_TOTAL DECIMAL(10, 2),
-    FOREIGN KEY (ID_TIEMPO) REFERENCES DIMTIEMPO(ID_TIEMPO),
-    FOREIGN KEY (ID_CLIENTE) REFERENCES DIMCLIENTES(ID_CLIENTE),
-    FOREIGN KEY (ID_VEHICULO) REFERENCES DIMVEHICULOS(ID_VEHICULO),
-    FOREIGN KEY (ID_EMPLEADO) REFERENCES DIMEMPLEADOS(ID_EMPLEADO)
+create table hechosordenesservicio (
+   id_orden           int primary key,
+   id_tiempo          date,
+   id_cliente         int,
+   id_vehiculo        int,
+   id_empleado        int,
+   cantidad_servicios int,
+   costo_total        decimal(10,2),
+   foreign key ( id_tiempo )
+      references dimtiempo ( id_tiempo ),
+   foreign key ( id_cliente )
+      references dimclientes ( id_cliente ),
+   foreign key ( id_vehiculo )
+      references dimvehiculos ( id_vehiculo ),
+   foreign key ( id_empleado )
+      references dimempleados ( id_empleado )
 );
 
 -- Tabla de Hechos Detalle de Servicios
-CREATE TABLE HECHOSDETALLESERVICIOS (
-    ID_DETALLE INT PRIMARY KEY,
-    ID_ORDEN INT,
-    ID_SERVICIO INT,
-    CANTIDAD INT,
-    FOREIGN KEY (ID_ORDEN) REFERENCES HECHOSORDENESSERVICIO(ID_ORDEN),
-    FOREIGN KEY (ID_SERVICIO) REFERENCES DIMSERVICIOS(ID_SERVICIO)
+create table hechosdetalleservicios (
+   id_detalle  int primary key,
+   id_orden    int,
+   id_servicio int,
+   cantidad    int,
+   foreign key ( id_orden )
+      references hechosordenesservicio ( id_orden ),
+   foreign key ( id_servicio )
+      references dimservicios ( id_servicio )
 );
