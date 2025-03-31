@@ -29,3 +29,7 @@ Ejecutar pip install oracledb
 Para conectar python a SqlServer
 
 Ejecutar pip install pyodbc
+
+# Interfaz Grafica
+
+Ejecutar pip install pandas
