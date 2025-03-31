@@ -40,7 +40,7 @@ def get_connection_oltp():
         dsn = "localhost:1521/xe" 
 
         try:
-            oracledb.init_oracle_client(lib_dir=r"C:\oraclexe\app\oracle\product\11.2.0\server\bin")
+            oracledb.init_oracle_client(lib_dir=r"C:\app\Amador\product\21c\dbhomeXE\bin")
             conn_oltp = oracledb.connect(user=user, password=password, dsn=dsn)
             messagebox.showinfo("Éxito", "¡Conexión exitosa a Oracle!")
             statusoltp.config(text="Estado: conectado a " + user + " desde " + dsn)
@@ -53,7 +53,7 @@ def get_connection_oltp():
 def get_connection_olap():
         """Solicita credenciales y devuelve una conexión a la base de datos."""
         global conn_olap
-        server ="localhost"
+        server ="AMADORDESKTOP\SQLEXPRESS"
         database = get_credentials_olap()
         
         if not server or not database:
@@ -64,7 +64,7 @@ def get_connection_olap():
             conn_olap = pyodbc.connect(f"DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};Trusted_Connection=yes")
             messagebox.showinfo("Éxito", "¡Conexión exitosa a SQLSERVER!")
             statusolap.config(text="Estado: conectado a " + database + " desde " + server)
-            frame_tablas_olap.place(x=1000,y=80)
+            frame_tablas_olap.place(x=900,y=140)
             actualizar_menu_olap()
         except Exception as exServer:
             messagebox.showerror("Error de conexión", f"Error: {exServer}")
@@ -200,8 +200,8 @@ def elegir_tabla_oltp():
         columnas = [desc[0] for desc in cursor.description]  # Obtener nombres de columnas
         datos = cursor.fetchall()
         datos_antes_filtro_e = pd.DataFrame(datos, columns=columnas)
-        frame_tablas_extraidas.place(x=0,y=500)
-        btn_seleccionar_columnas_oltp.place(x=20,y=800)
+        frame_tablas_extraidas.place(x=0,y=300)
+        btn_seleccionar_columnas_oltp.place(x=15,y=500)
         # Limpiar selección anterior
         for widget in frame_tablas_extraidas.winfo_children():
             widget.destroy()
@@ -224,8 +224,8 @@ def seleccionar_columnas():
     
     seleccionadas = [col for col, var in selected_columns.items() if var.get()]
     datos_despues_filtro_e = datos_antes_filtro_e[seleccionadas]
-    frame_etl_options.place(x=500,y=10)
-    btn_aplicar_transformaciones.place(x=500,y=800)
+    frame_etl_options.place(x=400,y=10)
+    btn_aplicar_transformaciones.place(x=400,y=500)
     for widget in frame_etl_options.winfo_children():
         widget.destroy()
     
@@ -277,11 +277,11 @@ def aplicar_transformaciones():
             datos_despues_filtro_t["Hora de: " +col] = pd.to_datetime(datos_despues_filtro_t[col], errors="coerce").dt.strftime("%H:%M:%S")
         elif operacion == "Concatenar":
             col_concat = selected_concat_etl_columns[col].get()
-            datos_despues_filtro_t[col+"+"+col_concat] = datos_despues_filtro_t[col].astype(str) + " " + datos_despues_filtro_t[col_concat].astype(str)
+            datos_despues_filtro_t[col+"+"+col_concat] = datos_despues_filtro_t[col].astype(str) +  datos_despues_filtro_t[col_concat].astype(str)
     
-    LabelOlap.place(x=1000,y=0)
-    statusolap.place(x=1000,y=20)
-    botonIngresar_Olap.place(x=1000,y=35)
+    LabelOlap.place(x=900,y=0)
+    statusolap.place(x=900,y=20)
+    botonIngresar_Olap.place(x=900,y=35)
 
 def elegir_tabla_olap():
     """Ejecuta la consulta SQL y muestra los campos disponibles para selección."""
@@ -297,8 +297,8 @@ def elegir_tabla_olap():
     try:
         cursor.execute(consulta)
         columnas = [desc[0] for desc in cursor.description]  # Obtener nombres de columnas
-        frame_inserciones.place(x=1000,y=500)
-        btn_insertar_datos.place(x=1000,y=800)
+        frame_inserciones.place(x=900,y=300)
+        btn_insertar_datos.place(x=900,y=500)
         # Limpiar selección anterior
         for widget in frame_inserciones.winfo_children():
             widget.destroy()
@@ -377,7 +377,7 @@ def insertar_datos():
 
 
 raiz=Tk()
-raiz.geometry("2500x1400")
+raiz.geometry("1280x800")
 raiz.title("ETL Bases de datos II")
 
 LabelOltp =Label(text="Conectarse a base de origen")
