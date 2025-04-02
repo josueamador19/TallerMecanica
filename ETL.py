@@ -237,7 +237,7 @@ def seleccionar_columnas():
         ttk.Label(frame_etl_options, text=col).grid(row=i, column=0,sticky="w")
 
         # Opciones según tipo de dato
-        if datos_despues_filtro_e[col].dtype == np.datetime64:
+        if datos_despues_filtro_e[col].dtype == "datetime64[ns]":
             opciones = ["...","Ninguno", "Obtener Día", "Obtener Mes", "Obtener Año", "Obtener Hora"]
         elif datos_despues_filtro_e[col].dtype == 'object' or datos_despues_filtro_e[col].dtype.name == 'string':
             opciones = ["...","Ninguno", "Minúscula", "Mayúscula", "Concatenar"]
